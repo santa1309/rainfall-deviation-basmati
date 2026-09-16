@@ -124,7 +124,7 @@ function drawMap(svgId, legendId, catKey, counts) {
     p.setAttribute("d", f.d);
     p.setAttribute("class", "dist");
     p.setAttribute("fill", catcol[f[catKey]]);
-    p.addEventListener("mousemove", e => showTip(e, f));
+    p.addEventListener("mousemove", e => showTip(e, f, catKey));
     p.addEventListener("mouseleave", hideTip);
     svg.appendChild(p);
   });
@@ -140,13 +140,15 @@ function drawMap(svgId, legendId, catKey, counts) {
 }
 
 const tip = document.getElementById("tip");
-function showTip(e, f) {
+function showTip(e, f, catKey) {
+  const cls = catKey === "cat25" ? f.cat25 : f.cat;
+  const clsLabel = catKey === "cat25" ? "Class (vs 2025)" : "Class (vs normal)";
   tip.innerHTML = `<b>${f.n}</b><div class="st">${f.s}</div>
     <div class="row"><span>Actual 2026</span><span>${f.a26} mm</span></div>
     <div class="row"><span>Normal</span><span>${f.nrm} mm</span></div>
     <div class="row"><span>vs. normal</span><span>${fmt(f.dn)}%</span></div>
     <div class="row"><span>vs. 2025</span><span>${fmt(f.d25)}%</span></div>
-    <div class="row"><span>Class</span><span>${f.cat}</span></div>`;
+    <div class="row"><span>${clsLabel}</span><span>${cls}</span></div>`;
   tip.style.opacity = 1;
   const r = tip.getBoundingClientRect();
   tip.style.left = Math.min(e.clientX + 14, innerWidth - r.width - 10) + "px";
